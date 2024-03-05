@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "intintervals")
-public class IntInterval {
+public class IntInterval{
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -47,7 +47,7 @@ public class IntInterval {
 
   @Override
   public String toString() {
-    return "Tutorial [id=" + id + ", title=" + start + ", desc=" + end + "]";
+    return start + ":" + end;
   }
 
 }

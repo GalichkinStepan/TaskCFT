@@ -68,8 +68,8 @@ public class IntervalDeserializer {
             }
             catch (Exception ex)
             {
-                throw(ex);
-                //break;
+                //throw(ex);
+                break;
             }
 
             try

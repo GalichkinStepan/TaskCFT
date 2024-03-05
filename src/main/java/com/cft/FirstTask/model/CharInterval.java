@@ -1,6 +1,7 @@
 package com.cft.FirstTask.model;
 
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.Interval;
 
 @Entity
 @Table(name = "charintervals")

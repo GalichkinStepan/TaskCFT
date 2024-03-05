@@ -25,35 +25,44 @@ public class IntervalController {
 	@Autowired
 	CharIntervalRepository charIntervalRepository;
 
-	@PostMapping("/merege")
-	public ResponseEntity<HttpStatus> createIntIntervals(@RequestParam("kind") String kind,  HttpServletRequest request) {
+	@Autowired
+	HttpServletRequest request;
 
+	@RequestMapping(value = "/merege", method = RequestMethod.POST, consumes = "application/json")
+	//PostMapping("/merege")
+	public ResponseEntity<String> createIntIntervals(@RequestParam("kind") String kind) {
 
 		IntervalDeserializer deserializer = new IntervalDeserializer();
 		IntervalsMereger mereger = new IntervalsMereger();
 
 		String requestBody = deserializer.GetStringBodyReqest(request);
-		if(kind == "digits")
+
+		List<IntInterval> intervals = deserializer.DeserializeToListIntInterval(requestBody);
+		List<IntInterval> meregedIntervals = mereger.MeregeIntIntervals(intervals);
+
+		for (int i = 0; i < intervals.size(); i++)
 		{
-			List<IntInterval> intervals = deserializer.DeserializeToListIntInterval(requestBody);
-			List<IntInterval> meregedIntervals = mereger.MeregeIntIntervals(intervals);
-
-			for (int i = 0; i < meregedIntervals.size(); i++)
-			{
-				intIntervalRepository.save(meregedIntervals.get(i));
-			}
-
+				intIntervalRepository.save(intervals.get(i));
+		}
+		/*if(kind == "digits")
+		{
 		} else if (kind == "letters") {
 
-		} else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<>(HttpStatus.OK);
+		} else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);*/
+		return new ResponseEntity<>(requestBody, HttpStatus.OK);
 
+	}
+
+	@GetMapping("/merege")
+	public ResponseEntity<HttpStatus> findMinInterval(@RequestParam("kind") String kind)
+	{
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@GetMapping("/int/{id}")
 	public ResponseEntity<IntInterval> getIntIntervalById(@PathVariable("id") long id) {
 		Optional<IntInterval> intervalData = intIntervalRepository.findById(id);
-
+		intIntervalRepository.save(new IntInterval(1,2));
 		if (intervalData.isPresent()) {
 			return new ResponseEntity<>(intervalData.get(), HttpStatus.OK);
 		} else {
