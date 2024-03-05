@@ -2,7 +2,7 @@ package com.cft.FirstTask.controller;
 
 import java.util.*;
 
-import com.cft.FirstTask.IntervalDesrializer;
+import com.cft.FirstTask.IntervalDeserializer;
 import com.cft.FirstTask.IntervalsMereger;
 import com.cft.FirstTask.repository.CharIntervalRepository;
 import com.cft.FirstTask.repository.IntIntervalRepository;
@@ -26,15 +26,28 @@ public class IntervalController {
 	CharIntervalRepository charIntervalRepository;
 
 	@PostMapping("/merege")
-	public ResponseEntity<String> createIntIntervals(@RequestParam("kind") String kind,  HttpServletRequest request) {
+	public ResponseEntity<HttpStatus> createIntIntervals(@RequestParam("kind") String kind,  HttpServletRequest request) {
 
 
-		IntervalDesrializer desrializer = new IntervalDesrializer();
+		IntervalDeserializer deserializer = new IntervalDeserializer();
 		IntervalsMereger mereger = new IntervalsMereger();
 
-		String requestBody = desrializer.GetStringBodyReqest(request);
+		String requestBody = deserializer.GetStringBodyReqest(request);
+		if(kind == "digits")
+		{
+			List<IntInterval> intervals = deserializer.DeserializeToListIntInterval(requestBody);
+			List<IntInterval> meregedIntervals = mereger.MeregeIntIntervals(intervals);
 
-		return new ResponseEntity<>("", HttpStatus.OK);
+			for (int i = 0; i < meregedIntervals.size(); i++)
+			{
+				intIntervalRepository.save(meregedIntervals.get(i));
+			}
+
+		} else if (kind == "letters") {
+
+		} else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(HttpStatus.OK);
+
 	}
 
 	@GetMapping("/int/{id}")
