@@ -1,5 +1,6 @@
 package com.cft.FirstTask;
 
+import com.cft.FirstTask.model.CharInterval;
 import com.cft.FirstTask.model.IntInterval;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -29,9 +30,8 @@ public class IntervalDeserializer {
         return requestBody.toString();
     }
 
-    public List<IntInterval> DeserializeToListIntInterval(String reqestBodyInput)
+    public List<IntInterval> DeserializeToListIntInterval(String reqestBody)
     {
-        String reqestBody = reqestBodyInput;
         List<IntInterval> output = new ArrayList<IntInterval>();
 
         System.out.println(reqestBody);
@@ -42,10 +42,9 @@ public class IntervalDeserializer {
         System.out.println(reqestBody);
         //[[1,2],[3,4],[5,6]]
 
-        //TODO как минимум переименовать
-        String kov = reqestBody.substring(2, 3); //Открывающая ковычка
-        String ikov = reqestBody.substring(reqestBody.length()-2, reqestBody.length()-1); // Закрывающая ковычка
-        System.out.println(kov + " " + ikov);
+        String breket = reqestBody.substring(2, 3); //Открывающая квадратная скобка
+        String invBreket = reqestBody.substring(reqestBody.length()-2, reqestBody.length()-1); // Закрывающая квадратная скобка
+        System.out.println(breket + " " + invBreket);
 
         reqestBody = reqestBody.substring(2, reqestBody.length() - 2);
 
@@ -54,8 +53,8 @@ public class IntervalDeserializer {
 
         while(!reqestBody.isEmpty())
         {
-            int startInd = reqestBody.indexOf(kov) + 1;
-            int endInd = reqestBody.indexOf(ikov);
+            int startInd = reqestBody.indexOf(breket) + 1;
+            int endInd = reqestBody.indexOf(invBreket);
             int zapInd = reqestBody.indexOf(',');
             try
             {
@@ -68,8 +67,8 @@ public class IntervalDeserializer {
             }
             catch (Exception ex)
             {
-                //throw(ex);
-                break;
+                throw(ex); // Deserialization ERROR
+                //break;
             }
 
             try
@@ -84,4 +83,59 @@ public class IntervalDeserializer {
 
         return output;
     }
+
+    public List<CharInterval> DeserializeToListCharInterval(String reqestBody)
+    {
+        List<CharInterval> output = new ArrayList<CharInterval>();
+
+        System.out.println(reqestBody);
+        //[[1, 2], [3, 4], [5, 6]]
+
+        reqestBody = reqestBody.replace(" ", "");
+
+        System.out.println(reqestBody);
+        //[[1,2],[3,4],[5,6]]
+
+        String breket = reqestBody.substring(2, 3); //Открывающая квадратная скобка
+        String invBreket = reqestBody.substring(reqestBody.length()-2, reqestBody.length()-1); // Закрывающая квадратная скобка
+        System.out.println(breket + " " + invBreket);
+
+        reqestBody = reqestBody.substring(2, reqestBody.length() - 2);
+
+        System.out.println(reqestBody);
+        //[1,2],[3,4],[5,6]
+
+        while(!reqestBody.isEmpty())
+        {
+            int startInd = reqestBody.indexOf(breket) + 1;
+            int endInd = reqestBody.indexOf(invBreket);
+            int zapInd = reqestBody.indexOf(',');
+            try
+            {
+                char startInterval = reqestBody.substring(startInd + 1, zapInd - 1).charAt(0);
+                char endInterval= reqestBody.substring(zapInd + 2, endInd - 1).charAt(0);
+                System.out.println(startInterval + " | " + endInterval);
+
+                output.add(new CharInterval(startInterval, endInterval));
+            }
+            catch (Exception ex)
+            {
+                throw(ex); // Deserilization ERROR
+                //break;
+            }
+
+            try
+            {
+                reqestBody = reqestBody.substring(endInd + 2);
+            }
+            catch (Exception ex)
+            {
+                break;
+            }
+        }
+
+        return output;
+
+    }
+
 }

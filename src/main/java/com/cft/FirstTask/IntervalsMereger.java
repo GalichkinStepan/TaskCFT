@@ -10,7 +10,22 @@ public class IntervalsMereger {
 
     public List<CharInterval> MeregeCharIntervals(List<CharInterval> intervals)
     {
-        return  intervals;
+        List<IntInterval> intIntervals = new ArrayList<IntInterval>();
+        for(int i = 0; i < intervals.size(); i++)
+        {
+            intIntervals.add(new IntInterval((int)intervals.get(i).getStart(), (int)intervals.get(i).getEnd()));
+        }
+
+        intIntervals = MeregeIntIntervals(intIntervals);
+
+        List<CharInterval> output = new ArrayList<CharInterval>();
+        for(int i = 0; i < intIntervals.size(); i++)
+        {
+            output.add(new CharInterval((char)intIntervals.get(i).getStart(), (char)intIntervals.get(i).getEnd()));
+            System.out.println(new CharInterval((char)intIntervals.get(i).getStart(), (char)intIntervals.get(i).getEnd()));
+        }
+
+        return  output;
     }
 
     public List<IntInterval> MeregeIntIntervals(List<IntInterval> intervals)

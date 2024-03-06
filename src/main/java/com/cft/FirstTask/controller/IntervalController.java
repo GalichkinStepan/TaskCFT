@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.cft.FirstTask.IntervalDeserializer;
 import com.cft.FirstTask.IntervalsMereger;
+import com.cft.FirstTask.model.CharInterval;
 import com.cft.FirstTask.repository.CharIntervalRepository;
 import com.cft.FirstTask.repository.IntIntervalRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,28 +31,37 @@ public class IntervalController {
 
 	@RequestMapping(value = "/merege", method = RequestMethod.POST, consumes = "application/json")
 	//PostMapping("/merege")
-	public ResponseEntity<String> createIntIntervals(@RequestParam("kind") String kind) {
+	public ResponseEntity<String> createIntIntervals(@RequestParam(name="kind") String kind) {
 
 		IntervalDeserializer deserializer = new IntervalDeserializer();
 		IntervalsMereger mereger = new IntervalsMereger();
 
 		String requestBody = deserializer.GetStringBodyReqest(request);
 
-		List<IntInterval> intervals = deserializer.DeserializeToListIntInterval(requestBody);
-		List<IntInterval> meregedIntervals = mereger.MeregeIntIntervals(intervals);
 
-		System.out.println("Должен сохранить: " + meregedIntervals);
-
-		for (int i = 0; i < meregedIntervals.size(); i++)
+		if(kind.equals("digits"))
 		{
+			List<IntInterval> intervals = deserializer.DeserializeToListIntInterval(requestBody);
+			List<IntInterval> meregedIntervals = mereger.MeregeIntIntervals(intervals);
 
-			intIntervalRepository.save(meregedIntervals.get(i));
-		}
-		/*if(kind == "digits")
-		{
-		} else if (kind == "letters") {
+			for (int i = 0; i < meregedIntervals.size(); i++)
+			{
+				intIntervalRepository.save(meregedIntervals.get(i));
+			}
+		} else if (kind.equals("letters")) {
 
-		} else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);*/
+			List<CharInterval> intervals = deserializer.DeserializeToListCharInterval(requestBody);
+			List<CharInterval> meregedIntervals = mereger.MeregeCharIntervals(intervals);
+
+			//charIntervalRepository.save(meregedIntervals.get(0));
+
+			for (int i = 0; i < meregedIntervals.size(); i++)
+			{
+				charIntervalRepository.save(meregedIntervals.get(i));
+			}
+			requestBody = "letters";
+
+		} else requestBody = "nothing";
 		return new ResponseEntity<>(requestBody, HttpStatus.OK);
 
 	}
