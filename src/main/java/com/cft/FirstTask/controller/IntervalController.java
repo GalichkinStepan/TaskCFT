@@ -76,12 +76,34 @@ public class IntervalController {
 		String out;
 		if(kind.equals("digits"))
 		{
-			IntInterval minInterval = intIntervalRepository.findMinInterval();
-			out = minInterval.toString();
+			try
+			{
+				IntInterval minInterval = intIntervalRepository.findMinInterval();
+				out = minInterval.toString();
+			}
+			catch (Exception ex)
+			{
+				if(intIntervalRepository.findAll().isEmpty())
+					return new ResponseEntity<>("Table is Empty", HttpStatus.NOT_FOUND);
+				else
+					return new ResponseEntity<>("Impossible find min (inner intersection)", HttpStatus.NOT_FOUND);
+			}
+
 		} else if (kind.equals("letters")) {
-			CharInterval minInterval = charIntervalRepository.findMinInterval();
-			out = minInterval.toString();
-		} else return new ResponseEntity<>("BadGateway", HttpStatus.BAD_GATEWAY);
+			try
+			{
+				CharInterval minInterval = charIntervalRepository.findMinInterval();
+				out = minInterval.toString();
+			}
+			catch (Exception exception)
+			{
+				if(charIntervalRepository.findAll().isEmpty())
+					return new ResponseEntity<>("Table is Empty", HttpStatus.NOT_FOUND);
+				else
+					return new ResponseEntity<>("Impossible find min (inner intersection)", HttpStatus.NOT_FOUND);
+			}
+
+		} else return new ResponseEntity<>("BadRequest", HttpStatus.BAD_REQUEST);
 
 		return new ResponseEntity<>(out, HttpStatus.OK);
 	}

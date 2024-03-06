@@ -54,7 +54,10 @@ public class IntervalsMereger {
             System.out.print(sortIntervals.get(i).getEnd() + " => " + sortIntervals.get(i + 1).getStart());
             if(sortIntervals.get(i).getEnd() >= sortIntervals.get(i + 1).getStart())
             {
-                sortIntervals.get(i).setEnd(sortIntervals.get(i + 1).getEnd());
+                if(sortIntervals.get(i + 1).getEnd() > sortIntervals.get(i).getEnd())
+                {
+                    sortIntervals.get(i).setEnd(sortIntervals.get(i + 1).getEnd());
+                }
                 sortIntervals.remove(sortIntervals.get(i + 1));
                 System.out.println(sortIntervals);
                 i--;
