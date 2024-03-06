@@ -44,6 +44,11 @@ public class IntervalController {
 		if(kind.equals("digits"))
 		{
 			List<IntInterval> intervals = deserializer.DeserializeToListIntInterval(requestBody);
+
+			for(int i = 0; i < intervals.size();i++) // Проверка некоторректных интервалов
+				if(intervals.get(i).getStart() > intervals.get(i).getEnd())
+					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
 			List<IntInterval> meregedIntervals = mereger.MeregeIntIntervals(intervals);
 
 			for (int i = 0; i < meregedIntervals.size(); i++)
@@ -53,6 +58,11 @@ public class IntervalController {
 		} else if (kind.equals("letters")) {
 
 			List<CharInterval> intervals = deserializer.DeserializeToListCharInterval(requestBody);
+
+			for(int i = 0; i < intervals.size();i++) // Проверка некоторректных интервалов
+				if((int)intervals.get(i).getStart() > (int)intervals.get(i).getEnd())
+					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
 			List<CharInterval> meregedIntervals = mereger.MeregeCharIntervals(intervals);
 
 			for (int i = 0; i < meregedIntervals.size(); i++)
