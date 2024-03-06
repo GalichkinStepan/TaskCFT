@@ -30,39 +30,26 @@ public class IntervalDeserializer {
         return requestBody.toString();
     }
 
-    public List<IntInterval> DeserializeToListIntInterval(String reqestBody)
+    public List<IntInterval> DeserializeToListIntInterval(String reqestBody)//{[[1, 2], [3, 4], [5, 6]]}
     {
         List<IntInterval> output = new ArrayList<IntInterval>();
 
-        System.out.println(reqestBody);
-        //[[1, 2], [3, 4], [5, 6]]
+        reqestBody = reqestBody.replace(" ", "");//{[[1,2],[3,4],[5,6]]}
 
-        reqestBody = reqestBody.replace(" ", "");
+        String breket = "[";
+        String invBreket = "]";
 
-        System.out.println(reqestBody);
-        //[[1,2],[3,4],[5,6]]
-
-        String breket = reqestBody.substring(2, 3); //Открывающая квадратная скобка
-        String invBreket = reqestBody.substring(reqestBody.length()-2, reqestBody.length()-1); // Закрывающая квадратная скобка
-        System.out.println(breket + " " + invBreket);
-
-        reqestBody = reqestBody.substring(2, reqestBody.length() - 2);
-
-        System.out.println(reqestBody);
-        //[1,2],[3,4],[5,6]
+        reqestBody = reqestBody.substring(2, reqestBody.length() - 2);//[1,2],[3,4],[5,6]
 
         while(!reqestBody.isEmpty())
         {
             int startInd = reqestBody.indexOf(breket) + 1;
             int endInd = reqestBody.indexOf(invBreket);
-            int zapInd = reqestBody.indexOf(',');
+            int commaInd = reqestBody.indexOf(',');
             try
             {
-                int startInterval = Integer.parseInt(reqestBody.substring(startInd, zapInd));
-                int endInterval= Integer.parseInt(reqestBody.substring(zapInd + 1, endInd));;
-                System.out.println(startInterval + " | " + endInterval);
-                //System.out.println(reqestBody.substring(endInd + 2));
-
+                int startInterval = Integer.parseInt(reqestBody.substring(startInd, commaInd));
+                int endInterval= Integer.parseInt(reqestBody.substring(commaInd + 1, endInd));;
                 output.add(new IntInterval(startInterval, endInterval));
             }
             catch (Exception ex)
@@ -84,26 +71,16 @@ public class IntervalDeserializer {
         return output;
     }
 
-    public List<CharInterval> DeserializeToListCharInterval(String reqestBody)
+    public List<CharInterval> DeserializeToListCharInterval(String reqestBody)//{ [["a", "b"], ["c", "d"], ["e", "f"]] }
     {
         List<CharInterval> output = new ArrayList<CharInterval>();
 
-        System.out.println(reqestBody);
-        //[[1, 2], [3, 4], [5, 6]]
+        reqestBody = reqestBody.replace(" ", "");//{[["a","b"],["c","d"],["e","f"]]}
 
-        reqestBody = reqestBody.replace(" ", "");
+        String breket = "[" ;
+        String invBreket = "]";
 
-        System.out.println(reqestBody);
-        //[[1,2],[3,4],[5,6]]
-
-        String breket = reqestBody.substring(2, 3); //Открывающая квадратная скобка
-        String invBreket = reqestBody.substring(reqestBody.length()-2, reqestBody.length()-1); // Закрывающая квадратная скобка
-        System.out.println(breket + " " + invBreket);
-
-        reqestBody = reqestBody.substring(2, reqestBody.length() - 2);
-
-        System.out.println(reqestBody);
-        //[1,2],[3,4],[5,6]
+        reqestBody = reqestBody.substring(2, reqestBody.length() - 2);//["a","b"],["c","d"],["e","f"]
 
         while(!reqestBody.isEmpty())
         {
@@ -114,8 +91,6 @@ public class IntervalDeserializer {
             {
                 char startInterval = reqestBody.substring(startInd + 1, zapInd - 1).charAt(0);
                 char endInterval= reqestBody.substring(zapInd + 2, endInd - 1).charAt(0);
-                System.out.println(startInterval + " | " + endInterval);
-
                 output.add(new CharInterval(startInterval, endInterval));
             }
             catch (Exception ex)
@@ -137,5 +112,4 @@ public class IntervalDeserializer {
         return output;
 
     }
-
 }

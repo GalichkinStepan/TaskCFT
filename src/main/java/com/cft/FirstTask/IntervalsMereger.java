@@ -10,6 +10,7 @@ public class IntervalsMereger {
 
     public List<CharInterval> MeregeCharIntervals(List<CharInterval> intervals)
     {
+        //Convert to IntIntervals
         List<IntInterval> intIntervals = new ArrayList<IntInterval>();
         for(int i = 0; i < intervals.size(); i++)
         {
@@ -18,20 +19,19 @@ public class IntervalsMereger {
 
         intIntervals = MeregeIntIntervals(intIntervals);
 
+        //Convert to CharIntervals
         List<CharInterval> output = new ArrayList<CharInterval>();
         for(int i = 0; i < intIntervals.size(); i++)
         {
             output.add(new CharInterval((char)intIntervals.get(i).getStart(), (char)intIntervals.get(i).getEnd()));
             System.out.println(new CharInterval((char)intIntervals.get(i).getStart(), (char)intIntervals.get(i).getEnd()));
         }
-
         return  output;
     }
 
     public List<IntInterval> MeregeIntIntervals(List<IntInterval> intervals)
     {
         List<IntInterval> sortIntervals = new ArrayList<IntInterval>();
-
 
         while (!intervals.isEmpty())
         {
@@ -45,13 +45,8 @@ public class IntervalsMereger {
             System.out.print(minStart.getStart() + " ");
         }
 
-
-
-        int changeLength = 0;
-
         for (int i = 0; i < sortIntervals.size() - 1; i++)
         {
-            System.out.print(sortIntervals.get(i).getEnd() + " => " + sortIntervals.get(i + 1).getStart());
             if(sortIntervals.get(i).getEnd() >= sortIntervals.get(i + 1).getStart())
             {
                 if(sortIntervals.get(i + 1).getEnd() > sortIntervals.get(i).getEnd())
@@ -59,7 +54,6 @@ public class IntervalsMereger {
                     sortIntervals.get(i).setEnd(sortIntervals.get(i + 1).getEnd());
                 }
                 sortIntervals.remove(sortIntervals.get(i + 1));
-                System.out.println(sortIntervals);
                 i--;
             }
         }

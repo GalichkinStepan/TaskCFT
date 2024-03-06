@@ -34,14 +34,12 @@ public class IntervalController {
 	HttpServletRequest request;
 
 	@RequestMapping(value = "/merege", method = RequestMethod.POST, consumes = "application/json")
-	//PostMapping("/merege")
-	public ResponseEntity<String> createIntIntervals(@RequestParam(name="kind") String kind) {
+	public ResponseEntity<HttpStatus> createIntIntervals(@RequestParam(name="kind") String kind) {
 
 		IntervalDeserializer deserializer = new IntervalDeserializer();
 		IntervalsMereger mereger = new IntervalsMereger();
 
 		String requestBody = deserializer.GetStringBodyReqest(request);
-
 
 		if(kind.equals("digits"))
 		{
@@ -57,29 +55,25 @@ public class IntervalController {
 			List<CharInterval> intervals = deserializer.DeserializeToListCharInterval(requestBody);
 			List<CharInterval> meregedIntervals = mereger.MeregeCharIntervals(intervals);
 
-			//charIntervalRepository.save(meregedIntervals.get(0));
-
 			for (int i = 0; i < meregedIntervals.size(); i++)
 			{
 				charIntervalRepository.save(meregedIntervals.get(i));
 			}
-			requestBody = "letters";
+		} else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-		} else requestBody = "nothing";
-		return new ResponseEntity<>(requestBody, HttpStatus.OK);
-
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@GetMapping("/min")
 	public ResponseEntity<String> findMinInterval(@RequestParam("kind") String kind)
 	{
-		String out;
+		String output;
 		if(kind.equals("digits"))
 		{
 			try
 			{
 				IntInterval minInterval = intIntervalRepository.findMinInterval();
-				out = minInterval.toString();
+				output = minInterval.toString();
 			}
 			catch (Exception ex)
 			{
@@ -93,7 +87,7 @@ public class IntervalController {
 			try
 			{
 				CharInterval minInterval = charIntervalRepository.findMinInterval();
-				out = minInterval.toString();
+				output = minInterval.toString();
 			}
 			catch (Exception exception)
 			{
@@ -105,20 +99,7 @@ public class IntervalController {
 
 		} else return new ResponseEntity<>("BadRequest", HttpStatus.BAD_REQUEST);
 
-		return new ResponseEntity<>(out, HttpStatus.OK);
-	}
-
-
-
-	@GetMapping("/int/{id}")
-	public ResponseEntity<IntInterval> getIntIntervalById(@PathVariable("id") long id) {
-		Optional<IntInterval> intervalData = intIntervalRepository.findById(id);
-		intIntervalRepository.save(new IntInterval(1,2));
-		if (intervalData.isPresent()) {
-			return new ResponseEntity<>(intervalData.get(), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+		return new ResponseEntity<>(output, HttpStatus.OK);
 	}
 }
 
