@@ -40,9 +40,12 @@ public class IntervalController {
 		List<IntInterval> intervals = deserializer.DeserializeToListIntInterval(requestBody);
 		List<IntInterval> meregedIntervals = mereger.MeregeIntIntervals(intervals);
 
-		for (int i = 0; i < intervals.size(); i++)
+		System.out.println("Должен сохранить: " + meregedIntervals);
+
+		for (int i = 0; i < meregedIntervals.size(); i++)
 		{
-				intIntervalRepository.save(intervals.get(i));
+
+			intIntervalRepository.save(meregedIntervals.get(i));
 		}
 		/*if(kind == "digits")
 		{

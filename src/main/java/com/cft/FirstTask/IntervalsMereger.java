@@ -17,43 +17,34 @@ public class IntervalsMereger {
     {
         List<IntInterval> sortIntervals = new ArrayList<IntInterval>();
 
-        try
-        {
-            while (!intervals.isEmpty())
-            {
-                IntInterval minStart = intervals.get(0);
-                for (int i = 0; i < intervals.size(); i++)
-                {
-                    if(intervals.get(i).getStart() < minStart.getStart()) minStart = intervals.get(i);
-                }
-                intervals.remove(minStart);
-                sortIntervals.add(minStart);
-            }
-        }
-        catch (Exception ex)
-        {
 
+        while (!intervals.isEmpty())
+        {
+            IntInterval minStart = intervals.get(0);
+            for (int i = 0; i < intervals.size(); i++)
+            {
+                if(intervals.get(i).getStart() < minStart.getStart()) minStart = intervals.get(i);
+            }
+            intervals.remove(minStart);
+            sortIntervals.add(minStart);
+            System.out.print(minStart.getStart() + " ");
         }
+
 
 
         int changeLength = 0;
-        try {
-            for (int i = 0; i < sortIntervals.size() - 2 - changeLength; i++)
+
+        for (int i = 0; i < sortIntervals.size() - 1; i++)
+        {
+            System.out.print(sortIntervals.get(i).getEnd() + " => " + sortIntervals.get(i + 1).getStart());
+            if(sortIntervals.get(i).getEnd() >= sortIntervals.get(i + 1).getStart())
             {
-                if(sortIntervals.get(i).getEnd() <= sortIntervals.get(i + 1).getStart())
-                {
-                    sortIntervals.get(i).setEnd(sortIntervals.get(i + 1).getEnd());
-                    sortIntervals.remove(sortIntervals.get(i + 1));
-                    changeLength++;
-                }
+                sortIntervals.get(i).setEnd(sortIntervals.get(i + 1).getEnd());
+                sortIntervals.remove(sortIntervals.get(i + 1));
+                System.out.println(sortIntervals);
+                i--;
             }
         }
-        catch (Exception ex)
-        {
-
-        }
-
-
         return  sortIntervals;
     }
 }
