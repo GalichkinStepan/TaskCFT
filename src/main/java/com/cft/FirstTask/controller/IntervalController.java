@@ -1,5 +1,6 @@
 package com.cft.FirstTask.controller;
 
+import java.net.http.HttpResponse;
 import java.util.*;
 
 import com.cft.FirstTask.IntervalDeserializer;
@@ -8,7 +9,10 @@ import com.cft.FirstTask.model.CharInterval;
 import com.cft.FirstTask.repository.CharIntervalRepository;
 import com.cft.FirstTask.repository.IntIntervalRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import netscape.javascript.JSException;
+import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -66,11 +70,23 @@ public class IntervalController {
 
 	}
 
-	@GetMapping("/merege")
-	public ResponseEntity<HttpStatus> findMinInterval(@RequestParam("kind") String kind)
+	@GetMapping("/min")
+	public ResponseEntity<String> findMinInterval(@RequestParam("kind") String kind)
 	{
-		return new ResponseEntity<>(HttpStatus.OK);
+		String out;
+		if(kind.equals("digits"))
+		{
+			IntInterval minInterval = intIntervalRepository.findMinInterval();
+			out = minInterval.toString();
+		} else if (kind.equals("letters")) {
+			CharInterval minInterval = charIntervalRepository.findMinInterval();
+			out = minInterval.toString();
+		} else return new ResponseEntity<>("BadGateway", HttpStatus.BAD_GATEWAY);
+
+		return new ResponseEntity<>(out, HttpStatus.OK);
 	}
+
+
 
 	@GetMapping("/int/{id}")
 	public ResponseEntity<IntInterval> getIntIntervalById(@PathVariable("id") long id) {

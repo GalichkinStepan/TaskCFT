@@ -47,7 +47,7 @@ public class IntInterval{
 
   @Override
   public String toString() {
-    return start + ":" + end;
+    return "[" + start + "," + end + "]";
   }
 
 }

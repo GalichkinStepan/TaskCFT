@@ -47,6 +47,6 @@ public class CharInterval {
 
     @Override
     public String toString() {
-        return start + ":" + end;
+        return "[\"" + start + "\",\"" + end + "\"]";
     }
 }
